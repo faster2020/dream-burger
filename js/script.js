@@ -1,52 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  // let hello = 'Hello World';
-  // hello = 'Hello friend';
-
-  // console.log(hello);
-
-  // const btnOpenModal = document.querySelector('#btnOpenModal');
-  // btnOpenModal.onclick = function () {
-  //   console.log('first');
-  // };
-
-  // console.dir(btnOpenModal);
-
-  // // Первый способ задания функции — декларативный
-  // function sumNumbers(a, b) {
-  //   return a + b;
-  // }
-
-  // // Второй способ — присваивание
-  // const sumNumbers2 = function (a, b) {
-  //   return a + b;
-  // };
-
-  // // Третий способ — стрелочные функции
-  // const sumNumbers3 = (a, b) => {
-  //   return a + b;
-  // };
-
-  // console.log(sumNumbers3(3, 9));
-
-  // Второй обработчик перезаписывает первый
-  // btnOpenModal.onclick = function () {
-  //   console.log('second');
-  // };
-
-  // // Более современный способ добавления обработчика
-  // btnOpenModal.addEventListener('click', function () {
-  //   console.log('third');
-  // });
-
-  // // Таких обработчиков может быть много
-  // btnOpenModal.addEventListener('click', function () {
-  //   console.log('fourth');
-  // });
-
-  // console.log(btnOpenModal);
-
   const btnOpenModal = document.querySelector('#btnOpenModal'),
     modalBlock = document.querySelector('#modalBlock'),
     closeModal = document.querySelector('#closeModal'),
@@ -98,5 +52,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   closeModal.addEventListener('click', () => {
     modalBlock.classList.remove('d-block');
+  });
+
+  modalBlock.addEventListener('click', event => {
+    if (event.target.className === modalBlock.className) {
+      modalBlock.classList.remove('d-block');
+    }
   });
 });
