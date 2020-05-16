@@ -10,14 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
     buttonPrev = document.getElementById('prev'),
     buttonNext = document.getElementById('next');
 
-  // const simple = 'простой';
-  // const string = `Я люблю "${simple}" JavaScript`;
-  // console.log(string);
-
-  // for (let i = 0; i <= 5; i++) {
-  //   console.log(i);
-  // }
-
   const resizeWindow = () => {
     const clientWidth = document.documentElement.clientWidth;
 
@@ -117,12 +109,6 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     ];
 
-    // questions[0].answers.forEach((item, index, arr) => {
-    //   console.log(item);
-    //   console.log(index);
-    //   console.log(arr);
-    // });
-
     const renderAnswers = indexQuestion => {
       const type = questions[indexQuestion].type;
       questions[indexQuestion].answers.forEach(({ id, title, url }) => {
@@ -180,9 +166,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     renderQuestions(numberQuestion);
-
-    // buttonPrev.addEventListener('click', prevQuestion);
-    // buttonNext.addEventListener('click', nextQuestion);
 
     buttonPrev.onclick = prevQuestion;
     buttonNext.onclick = nextQuestion;
