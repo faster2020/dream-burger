@@ -39,7 +39,7 @@ label span {
 .logo-img {
   width: 50px;
   height: 50px;
-  background: url("../img/burger.png") center no-repeat;
+  background: url('../img/burger.png') center no-repeat;
   background-size: contain;
 }
 
@@ -47,15 +47,45 @@ label span {
 .contacts,
 .main-title,
 .arrow {
+  margin-bottom: 0;
   color: #3cb371;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  /* -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black; */
+}
+
+.button-burger {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.button-burger span {
+  display: block;
+  width: 30px;
+  height: 5px;
+  background-color: #3cb371;
+  transition: all 0.4s;
+}
+
+.button-burger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(9px, 9px);
+}
+
+.button-burger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.button-burger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(9px, -9px);
 }
 
 .content {
   width: 300px;
   height: 300px;
-  background: url("../img/burger-4026165_960_720.webp") center no-repeat;
+  background: url('../img/burger-4026165_960_720.webp') center no-repeat;
   background-size: 115%;
 }
 
@@ -79,8 +109,8 @@ label span {
 .btn-outline-danger span {
   font-size: 2rem !important;
   color: #3cb371;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  /* -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black; */
 }
 
 .btn-outline-danger:hover,
@@ -96,6 +126,6 @@ label span {
 .btn-outline-danger:focus span,
 .btn-outline-danger:visited span {
   color: #e0ffff !important;
-  -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: black;
+  /* -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black; */
 }
