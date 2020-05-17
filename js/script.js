@@ -145,17 +145,22 @@ document.addEventListener('DOMContentLoaded', function () {
     // Функция рендеринга кнопок навигации по тесту
     const renderButtons = indexQuestion => {
       switch (true) {
-        case indexQuestion < 1:
+        case indexQuestion === 0:
+          buttonNext.classList.remove('d-none');
           buttonPrev.classList.add('d-none');
+          buttonSend.classList.add('d-none');
           break;
-        case indexQuestion > questions.length - 1:
+        case indexQuestion >= 1 && indexQuestion <= questions.length - 1:
+          buttonPrev.classList.remove('d-none');
+          buttonNext.classList.remove('d-none');
+          buttonSend.classList.add('d-none');
+          break;
+        case indexQuestion === questions.length:
           buttonNext.classList.add('d-none');
           buttonSend.classList.remove('d-none');
           break;
         default:
-          buttonPrev.classList.remove('d-none');
-          buttonNext.classList.remove('d-none');
-          buttonSend.classList.add('d-none');
+          console.log('Что-то пошло не так');
       }
     };
 
@@ -224,6 +229,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Функциия отправки ответов на тест
     const sendAnswers = () => {
+      buttonPrev.classList.add('d-none');
+      buttonSend.classList.add('d-none');
+
       checkAnswers(numberQuestion);
       console.log(finalAnswers);
 
