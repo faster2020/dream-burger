@@ -227,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
       checkAnswers(numberQuestion);
       console.log(finalAnswers);
 
+      questionTitle.textContent = 'Спасибо!';
       formAnswers.textContent = 'Наш консультант свяжется с вами в течение 5 минут!';
       setTimeout(() => {
         modalBlock.classList.remove('d-block');
