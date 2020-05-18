@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     modalBlock = document.querySelector('#modalBlock'),
     modalDialog = document.querySelector('.modal-dialog'),
     closeModal = document.querySelector('#closeModal'),
+    modalTitle = document.querySelector('.modal-title'),
     questionTitle = document.querySelector('#question'),
     formAnswers = document.querySelector('#formAnswers'),
     buttonBurger = document.getElementById('buttonBurger'),
@@ -14,93 +15,52 @@ document.addEventListener('DOMContentLoaded', function () {
     buttonNext = document.getElementById('next'),
     buttonSend = document.getElementById('send');
 
-  // Массив вопросов и ответов
-  const questions = [
-    {
-      question: 'Какого цвета бургер?',
-      answers: [
-        {
-          id: '00',
-          title: 'Стандарт',
-          url: './img/burger.png',
-        },
-        {
-          id: '01',
-          title: 'Черный',
-          url: './img/burgerBlack.png',
-        },
-      ],
-      type: 'radio',
-    },
-    {
-      question: 'Из какого мяса котлета?',
-      answers: [
-        {
-          id: '10',
-          title: 'Курица',
-          url: './img/chickenMeat.png',
-        },
-        {
-          id: '11',
-          title: 'Говядина',
-          url: './img/beefMeat.png',
-        },
-        {
-          id: '12',
-          title: 'Свинина',
-          url: './img/porkMeat.png',
-        },
-      ],
-      type: 'radio',
-    },
-    {
-      question: 'Дополнительные ингредиенты?',
-      answers: [
-        {
-          id: '20',
-          title: 'Помидор',
-          url: './img/tomato.png',
-        },
-        {
-          id: '21',
-          title: 'Огурец',
-          url: './img/cucumber.png',
-        },
-        {
-          id: '22',
-          title: 'Салат',
-          url: './img/salad.png',
-        },
-        {
-          id: '23',
-          title: 'Лук',
-          url: './img/onion.png',
-        },
-      ],
-      type: 'checkbox',
-    },
-    {
-      question: 'Добавить соус?',
-      answers: [
-        {
-          id: '30',
-          title: 'Чесночный',
-          url: './img/sauce1.png',
-        },
-        {
-          id: '31',
-          title: 'Томатный',
-          url: './img/sauce2.png',
-        },
-        {
-          id: '32',
-          title: 'Горчичный',
-          url: './img/sauce3.png',
-        },
-      ],
-      type: 'radio',
-    },
-  ];
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: 'AIzaSyB38PcDVPkhI6vAXWufqaL6fXlApeeSMdI',
+    authDomain: 'dream-burger-c7919.firebaseapp.com',
+    databaseURL: 'https://dream-burger-c7919.firebaseio.com',
+    projectId: 'dream-burger-c7919',
+    storageBucket: 'dream-burger-c7919.appspot.com',
+    messagingSenderId: '29347107095',
+    appId: '1:29347107095:web:0d14242a252641ead8e752',
+    measurementId: 'G-MDJTH66ER0',
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // Получение данных через fetch
+  // const getData = () => {
+  //   modalTitle.textContent = 'Ожидайте...';
+  //   questionTitle.textContent = 'Данные загружаются...';
+  //   formAnswers.textContent = '';
+
+  //   setTimeout(() => {
+  //     fetch('./db/questions.json')
+  //       .then(responce => responce.json())
+  //       .then(data => playTest(data.questions))
+  //       .catch(err => {
+  //         questionTitle.textContent = 'Ошибка загрузки данных!';
+  //         console.error(err);
+  //       });
+  //   }, 2000);
+  // };
+
+  // Получение данных из Firebase
+  const getData = () => {
+    modalTitle.textContent = 'Ожидайте...';
+    questionTitle.textContent = 'Данные загружаются...';
+    formAnswers.textContent = '';
+    buttonPrev.classList.add('d-none');
+    buttonNext.classList.add('d-none');
+
+    firebase
+      .database()
+      .ref()
+      .child('questions')
+      .once('value')
+      .then(snap => playTest(snap.val()));
+  };
 
   // Функция, отслеживающая изменение ширины окна
   const resizeWindow = () => {
@@ -114,7 +74,10 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
   // Основная функция, запускающая тестирование
-  const playTest = () => {
+  const playTest = questions => {
+    // Константа, хранящая промежуточный объект ответов
+    const answers = {};
+
     // Константа, хранящая массив ответов
     const finalAnswers = [];
 
@@ -150,17 +113,18 @@ document.addEventListener('DOMContentLoaded', function () {
           buttonPrev.classList.add('d-none');
           buttonSend.classList.add('d-none');
           break;
-        case indexQuestion >= 1 && indexQuestion <= questions.length - 1:
-          buttonPrev.classList.remove('d-none');
-          buttonNext.classList.remove('d-none');
-          buttonSend.classList.add('d-none');
-          break;
         case indexQuestion === questions.length:
           buttonNext.classList.add('d-none');
           buttonSend.classList.remove('d-none');
           break;
+        case indexQuestion === questions.length + 1:
+          buttonPrev.classList.add('d-none');
+          buttonSend.classList.add('d-none');
+          break;
         default:
-          console.log('Что-то пошло не так');
+          buttonPrev.classList.remove('d-none');
+          buttonNext.classList.remove('d-none');
+          buttonSend.classList.add('d-none');
       }
     };
 
@@ -170,21 +134,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
       switch (true) {
         case indexQuestion >= 0 && indexQuestion <= questions.length - 1:
+          modalTitle.textContent = 'Ответьте на вопрос:';
           questionTitle.textContent = questions[indexQuestion].question;
           renderAnswers(indexQuestion);
           renderButtons(indexQuestion);
           break;
         case indexQuestion === questions.length:
+          modalTitle.textContent = '';
           questionTitle.textContent = 'Тест завершен';
           formAnswers.insertAdjacentHTML(
             'afterbegin',
             `
             <div class="form-group">
-              <label for="inputPhone">Введите номер телефона</label>
-              <input type="phone" class="form-control" id="inputPhone">
+              <label for="numberPhone">Введите номер телефона</label>
+              <input type="phone" class="form-control" id="numberPhone">
             </div>
             `
           );
+
+          const numberPhone = document.getElementById('numberPhone');
+
+          numberPhone.addEventListener('input', event => {
+            event.target.value = event.target.value.replace(/[^0-9+-]/, '');
+          });
+
+          renderButtons(indexQuestion);
+          break;
+        case indexQuestion === questions.length + 1:
+          for (let key in answers) {
+            let newAnswers = {};
+            newAnswers[key] = answers[key];
+            finalAnswers.push(newAnswers);
+          }
+
+          questionTitle.textContent = 'Спасибо!';
+          formAnswers.textContent = 'Наш консультант свяжется с вами в течение 5 минут!';
           renderButtons(indexQuestion);
           break;
         default:
@@ -194,9 +178,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Функция проверки ответов на вопросы
     const checkAnswers = indexQuestion => {
-      const answers = {};
-
-      const inputs = [...formAnswers.elements].filter(input => input.checked || input.id === 'inputPhone');
+      const inputs = [...formAnswers.elements].filter(
+        input => input.checked || input.id === 'numberPhone'
+      );
 
       inputs.forEach((input, index) => {
         switch (true) {
@@ -210,8 +194,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('Что-то пошло не так');
         }
       });
-
-      finalAnswers.push(answers);
     };
 
     // Функция перехода к предыдущему вопросу
@@ -229,14 +211,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Функциия отправки ответов на тест
     const sendAnswers = () => {
-      buttonPrev.classList.add('d-none');
-      buttonSend.classList.add('d-none');
-
       checkAnswers(numberQuestion);
-      console.log(finalAnswers);
+      numberQuestion++;
+      renderQuestions(numberQuestion);
 
-      questionTitle.textContent = 'Спасибо!';
-      formAnswers.textContent = 'Наш консультант свяжется с вами в течение 5 минут!';
+      firebase.database().ref().child('contacts').push(finalAnswers);
+
       setTimeout(() => {
         modalBlock.classList.remove('d-block');
         buttonBurger.classList.remove('active');
@@ -280,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
     requestAnimationFrame(animateModal);
 
     modalBlock.classList.add('d-block');
-    playTest();
+    getData();
   });
 
   // Обработчик открытия модального окна по клику на кнопку-бургер
@@ -290,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     buttonBurger.classList.add('active');
     modalBlock.classList.add('d-block');
-    playTest();
+    getData();
   });
 
   // Обработчик закрытия модального окна по клику на крестик

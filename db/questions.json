@@ -1,13 +1,16 @@
 {
   "questions": [
     {
+      "id": "q00",
       "question": "Какого цвета бургер?",
       "answers": [
         {
+          "id": "q00a00",
           "title": "Стандарт",
           "url": "./img/burger.png"
         },
         {
+          "id": "q00a01",
           "title": "Черный",
           "url": "./img/burgerBlack.png"
         }
@@ -15,17 +18,21 @@
       "type": "radio"
     },
     {
+      "id": "q01",
       "question": "Из какого мяса котлета?",
       "answers": [
         {
+          "id": "q01a00",
           "title": "Курица",
           "url": "./img/chickenMeat.png"
         },
         {
+          "id": "q01a01",
           "title": "Говядина",
           "url": "./img/beefMeat.png"
         },
         {
+          "id": "q01a02",
           "title": "Свинина",
           "url": "./img/porkMeat.png"
         }
@@ -33,21 +40,26 @@
       "type": "radio"
     },
     {
+      "id": "q02",
       "question": "Дополнительные ингредиенты?",
       "answers": [
         {
+          "id": "q02a00",
           "title": "Помидор",
           "url": "./img/tomato.png"
         },
         {
+          "id": "q02a01",
           "title": "Огурец",
           "url": "./img/cucumber.png"
         },
         {
+          "id": "q02a02",
           "title": "Салат",
           "url": "./img/salad.png"
         },
         {
+          "id": "q02a03",
           "title": "Лук",
           "url": "./img/onion.png"
         }
@@ -55,17 +67,21 @@
       "type": "checkbox"
     },
     {
+      "id": "q03",
       "question": "Добавить соус?",
       "answers": [
         {
+          "id": "q03a00",
           "title": "Чесночный",
           "url": "./img/sauce1.png"
         },
         {
+          "id": "q03a01",
           "title": "Томатный",
           "url": "./img/sauce2.png"
         },
         {
+          "id": "q03a02",
           "title": "Горчичный",
           "url": "./img/sauce3.png"
         }
