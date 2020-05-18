@@ -50,7 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const getData = () => {
     modalTitle.textContent = 'Ожидайте...';
     questionTitle.textContent = 'Данные загружаются...';
-    formAnswers.textContent = '';
+    formAnswers.innerHTML = `
+      <img src="./img/spinner.gif" alt="Загрузка данных" title="Данные загружаются...">
+    `;
     buttonPrev.classList.add('d-none');
     buttonNext.classList.add('d-none');
 
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
   // Основная функция, запускающая тестирование
   const playTest = questions => {
     // Константа, хранящая промежуточный объект ответов
-    const answers = {};
+    // const answers = [];
 
     // Константа, хранящая массив ответов
     const finalAnswers = [];
@@ -136,23 +138,25 @@ document.addEventListener('DOMContentLoaded', function () {
         case indexQuestion >= 0 && indexQuestion <= questions.length - 1:
           modalTitle.textContent = 'Ответьте на вопрос:';
           questionTitle.textContent = questions[indexQuestion].question;
+          formAnswers.dataset.questionId = questions[indexQuestion].id;
           renderAnswers(indexQuestion);
           renderButtons(indexQuestion);
           break;
         case indexQuestion === questions.length:
           modalTitle.textContent = '';
           questionTitle.textContent = 'Тест завершен';
+          formAnswers.dataset.questionId = 'n00';
           formAnswers.insertAdjacentHTML(
             'afterbegin',
             `
             <div class="form-group">
-              <label for="numberPhone">Введите номер телефона</label>
-              <input type="phone" class="form-control" id="numberPhone">
+              <label for="n00a00">Введите номер телефона</label>
+              <input type="phone" class="form-control" id="n00a00">
             </div>
             `
           );
 
-          const numberPhone = document.getElementById('numberPhone');
+          const numberPhone = document.getElementById('n00a00');
 
           numberPhone.addEventListener('input', event => {
             event.target.value = event.target.value.replace(/[^0-9+-]/, '');
@@ -161,12 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
           renderButtons(indexQuestion);
           break;
         case indexQuestion === questions.length + 1:
-          for (let key in answers) {
-            let newAnswers = {};
-            newAnswers[key] = answers[key];
-            finalAnswers.push(newAnswers);
-          }
-
           questionTitle.textContent = 'Спасибо!';
           formAnswers.textContent = 'Наш консультант свяжется с вами в течение 5 минут!';
           renderButtons(indexQuestion);
@@ -178,28 +176,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Функция проверки ответов на вопросы
     const checkAnswers = indexQuestion => {
-      const inputs = [...formAnswers.elements].filter(
-        input => input.checked || input.id === 'numberPhone'
-      );
+      let questionId = '';
+      let question = '';
+      const answers = [];
+
+      switch (true) {
+        case indexQuestion >= 0 && indexQuestion <= questions.length - 1:
+          questionId = questions[indexQuestion].id;
+          question = questions[indexQuestion].question;
+          break;
+        case indexQuestion === questions.length:
+          questionId = 'n00';
+          question = 'Введите номер телефона';
+          break;
+        default:
+          console.log('Что-то пошло не так');
+      }
+
+      const inputs = [...formAnswers.elements].filter(input => input.checked || input.id === 'n00a00');
 
       inputs.forEach((input, index) => {
-        switch (true) {
-          case indexQuestion >= 0 && indexQuestion <= questions.length - 1:
-            answers[`${index}_${questions[indexQuestion].question}`] = input.value;
-            break;
-          case indexQuestion === questions.length:
-            answers['0_Номер телефона'] = input.value;
-            break;
-          default:
-            console.log('Что-то пошло не так');
-        }
+        answers[index] = {
+          id: input.id,
+          title: input.value,
+        };
       });
+
+      finalAnswers[indexQuestion] = {
+        id: questionId,
+        question,
+        answers,
+      };
+
+      console.log(finalAnswers);
+    };
+
+    const setAnswers = indexQuestion => {
+      if (finalAnswers[indexQuestion]) {
+        const inputs = [...formAnswers.elements];
+        const inputsChecked = [];
+
+        finalAnswers[indexQuestion].answers.forEach(answer => {
+          inputsChecked.push(inputs.find(input => input.id === answer.id));
+        });
+
+        inputsChecked.forEach(inputChecked => (inputChecked.checked = 'true'));
+      }
     };
 
     // Функция перехода к предыдущему вопросу
     const prevQuestion = () => {
+      checkAnswers(numberQuestion);
       numberQuestion--;
       renderQuestions(numberQuestion);
+      setAnswers(numberQuestion);
     };
 
     // Функия перехода к следующему вопросу
@@ -207,6 +237,7 @@ document.addEventListener('DOMContentLoaded', function () {
       checkAnswers(numberQuestion);
       numberQuestion++;
       renderQuestions(numberQuestion);
+      setAnswers(numberQuestion);
     };
 
     // Функциия отправки ответов на тест
